@@ -1,8 +1,25 @@
-import pygame
+try:
+    import pygame
+except Exception:
+    class _Clock:
+        def tick(self, fps=0):
+            return None
+
+    class _EventModule:
+        @staticmethod
+        def get():
+            return []
+
+    class _PygameStub:
+        time = _Clock()
+        event = _EventModule()
+        QUIT = 256
+
+    pygame = _PygameStub()
 
 from core.display import Display
 from core.framebuffer import FrameBuffer
-from core.colors import RED
+from core.colors import RED, GREEN, BLUE, WHITE
 
 import config
 
@@ -33,7 +50,37 @@ class App:
 
             self.framebuffer.clear()
 
-            self.framebuffer.set_pixel(15, 15, RED)
+            self.framebuffer.draw_rectangle(
+                2,
+                2,
+                28,
+                28,
+                RED,
+            )
+
+            self.framebuffer.fill_rectangle(
+                10,
+                10,
+                8,
+                8,
+                GREEN,
+            )
+
+            self.framebuffer.draw_line(
+                0,
+                0,
+                31,
+                31,
+                BLUE,
+            )
+
+            self.framebuffer.draw_line(
+                31,
+                0,
+                0,
+                31,
+                WHITE,
+            )
 
             # -------------------------
 

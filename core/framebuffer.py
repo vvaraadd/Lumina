@@ -1,8 +1,10 @@
 from core.colors import BLACK
+from core.drawing import DrawingMixin
+
 import config
 
 
-class FrameBuffer:
+class FrameBuffer(DrawingMixin):
     """
     Stores the color of every pixel on the display.
     """
