@@ -1,6 +1,6 @@
 try:
     import pygame
-except Exception:
+except Exception:  # pragma: no cover - fallback for environments without pygame
     class _Clock:
         def tick(self, fps=0):
             return None
@@ -10,8 +10,13 @@ except Exception:
         def get():
             return []
 
+    class _TimeModule:
+        @staticmethod
+        def Clock():
+            return _Clock()
+
     class _PygameStub:
-        time = _Clock()
+        time = _TimeModule()
         event = _EventModule()
         QUIT = 256
 
@@ -19,7 +24,7 @@ except Exception:
 
 from core.display import Display
 from core.framebuffer import FrameBuffer
-from core.colors import RED, GREEN, BLUE, WHITE
+from core.screen_manager import ScreenManager
 
 import config
 
@@ -30,6 +35,7 @@ class App:
 
         self.display = Display()
         self.framebuffer = FrameBuffer()
+        self.screen_manager = ScreenManager()
 
         self.running = True
 
@@ -44,48 +50,16 @@ class App:
                 if event.type == pygame.QUIT:
                     self.running = False
 
-            # -------------------------
-            # Demo
-            # -------------------------
+            # Update the current screen
+            self.screen_manager.update()
 
-            self.framebuffer.clear()
+            # Draw the current screen
+            self.screen_manager.draw(self.framebuffer)
 
-            self.framebuffer.draw_rectangle(
-                2,
-                2,
-                28,
-                28,
-                RED,
-            )
-
-            self.framebuffer.fill_rectangle(
-                10,
-                10,
-                8,
-                8,
-                GREEN,
-            )
-
-            self.framebuffer.draw_line(
-                0,
-                0,
-                31,
-                31,
-                BLUE,
-            )
-
-            self.framebuffer.draw_line(
-                31,
-                0,
-                0,
-                31,
-                WHITE,
-            )
-
-            # -------------------------
-
+            # Render the framebuffer
             self.display.render(self.framebuffer)
 
+            # Limit FPS
             self.clock.tick(config.FPS)
 
         self.display.close()
