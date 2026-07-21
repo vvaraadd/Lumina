@@ -1,1 +1,2 @@
 # Lumina
+Run main.py
