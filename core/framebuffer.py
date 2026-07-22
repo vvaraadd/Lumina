@@ -3,6 +3,7 @@ from core.drawing import DrawingMixin
 from core.font import FONT, DEFAULT_CHARACTER, FONT_WIDTH, FONT_SPACING
 
 import config
+from widgets import text
 
 
 class FrameBuffer(DrawingMixin):
@@ -75,3 +76,16 @@ class FrameBuffer(DrawingMixin):
         for character in text:
             self.draw_character(cursor_x, y, character, color)
             cursor_x += FONT_WIDTH + FONT_SPACING
+    
+    def get_text_width(self, text):
+        """
+        Returns the width of the text in pixels.
+        """
+
+        if len(text) == 0:
+            return 0
+
+        return (
+            len(text) * FONT_WIDTH
+            + (len(text) - 1) * FONT_SPACING
+        )
